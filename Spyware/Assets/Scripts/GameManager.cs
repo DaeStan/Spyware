@@ -9,10 +9,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 {
     public static GameManager instance;
 
-    public GameObject playerPrefabLocation; // path in Resources folder to the Player prefab
+    public string playerPrefabLocation; // path in Resources folder to the Player prefab
 
     public PlayerController[] players; // array of all the players
-    private int playersInGame; // number of players in the game
+    public int playersInGame; // number of players in the game
 
     private void Awake()
     {
@@ -32,10 +32,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         playersInGame++;
         if (playersInGame == PhotonNetwork.PlayerList.Length)
         {
-            GameObject player = GameObject.Instantiate(playerPrefabLocation, new Vector3(0, 0, 0), Quaternion.identity);
+            GameObject player = PhotonNetwork.Instantiate(playerPrefabLocation, new Vector3(0, 0, 0), Quaternion.identity);
 
+            PlayerController playerScript = player.GetComponent<PlayerController>();
 
-            player.GetComponent<PlayerController>().photonView.RPC("Initalize", RpcTarget.All, PhotonNetwork.LocalPlayer);
+            playerScript.photonView.RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
         }
 
     }

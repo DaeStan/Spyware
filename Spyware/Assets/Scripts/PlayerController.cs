@@ -11,6 +11,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
     public int id;
     public Player photonPlayer;
+
+    private CardManager CardManager;
+
     //bool for winnig card
     //int winningcard = 0;
 
@@ -20,9 +23,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         photonPlayer = player;
         id = player.ActorNumber;
         Debug.Log("player entered game");
-        Debug.Log(PhotonNetwork.PlayerList[id].NickName);
+        Debug.Log(PhotonNetwork.PlayerList[id - 1].NickName);
 
         GameManager.instance.players[id - 1] = this;
+
+        //CardManager = GetComponent<CardManager>();
+        CardManager.instance.dealCards(id);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
