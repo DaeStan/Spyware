@@ -14,16 +14,17 @@ public class DisplayHand : MonoBehaviourPunCallbacks
 
     GameObject playerCanvas;
 
-    //  [Header("Cards in Deck")]
-    //  public GameObject card1;
-    //  public GameObject card2;
-    //  public GameObject card3;
-    //  public GameObject card4;
-    //  public GameObject card5;
-    //  public GameObject card6;
-    //  public GameObject card7;
-    //   public GameObject card8;
-    //  public GameObject card9;
+    //i dont need this or the prefabs atm may change later
+    [Header("Cards in Deck")]
+    public GameObject card1;
+    public GameObject card2;
+    public GameObject card3;
+    public GameObject card4;
+    public GameObject card5;
+    public GameObject card6;
+    public GameObject card7;
+    public GameObject card8;
+    public GameObject card9;
 
     //get player id fromm player controller
 
@@ -38,14 +39,14 @@ public class DisplayHand : MonoBehaviourPunCallbacks
     [PunRPC]
 public void displayPLayerHand (int playerid, int[] playerHand, Dictionary<string, int> deck)
     {
-        playerCanvas = GameObject.Find("Canvas");
+        playerCanvas = GameObject.Find("PlayerScreen");
         for (int i = 0; i < playerHand.Length; i++)
         {
             cardNumber = playerHand[i];
-            if(cardNumber == 0) //get rid of once player id in other funtions are fixed
-            {
-                cardNumber = 1;
-            }
+           // if(cardNumber == 0) //get rid of once player id in other funtions are fixed
+           // {
+           //     cardNumber = 1;
+           // }
             Debug.Log("inDisplayFunction: " + cardNumber);
             foreach (KeyValuePair<string, int> kvp in deck)
             {
@@ -53,12 +54,35 @@ public void displayPLayerHand (int playerid, int[] playerHand, Dictionary<string
                 {
                     cardPrefabName = kvp.Key;
                     Debug.Log("Got Prefab Name: " + cardPrefabName);
-                    GameObject cardPrefab = Resources.Load<GameObject>(cardPrefabName);
+                    GameObject cardPrefab = GameObject.Find(cardPrefabName);
+
+                    Debug.Log("Got card object" + cardPrefab.name);
+
+
+                    //error messages
+                    if (cardPrefab == null)
+                    {
+                        Debug.LogError("Card Prefab with name " + cardPrefabName + " not found in the scene.");
+                        return;  // Exit if cardPrefab is null to prevent null reference exceptions
+                    }
+
+                    // Ensure playerCanvas is not null
+                    if (playerCanvas == null)
+                    {
+                        Debug.LogError("Player canvas is not assigned.");
+                        return;  // Exit if playerCanvas is null to prevent null reference exceptions
+                    }
+
+                    //cardPrefab.SetActive(true);
 
                     // GameObject cardPrefab = cardPrefabs[cardPrefabName];
-                    GameObject cardInstance = Instantiate(cardPrefab);
-                    cardInstance.SetActive(true);
-                    cardInstance.transform.SetParent(playerCanvas.transform);
+                    // GameObject cardInstance = Instantiate(cardPrefab);
+                    //cardInstance.SetActive(true);
+                    Debug.Log("Got Prefab Name: " + cardPrefabName);
+                    Debug.Log("Got canvas Name: " + playerCanvas);
+                    //Debug.Log("Got card object" + cardPrefab.name);
+                    cardPrefab.transform.SetParent(playerCanvas.transform, true);
+                    // cardInstance.onClick.AddListener(delegate { PlayerController.PlayerTurn(); })
                     //cardPrefab.SetActive(true);
                 }
             }

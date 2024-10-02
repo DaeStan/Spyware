@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
 {
-    int maxCardsForHand = 3;
+    public static int maxCardsForHand = 3;
     int numberOfCardsInDeck;
     int shufflingDeck;
-    int[] playerHand = new int[5]; //= new int[MaxCardsForHand];
+    int[] playerHand = new int[maxCardsForHand]; //= new int[MaxCardsForHand];
     int[] currentPlayerHand;
     int[] nextPlayerHand;
     int nextPlayerId;
@@ -76,10 +76,10 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
 
         currentPlayerHansds.Add(playerid, playerHand);
 
-        DisplayHand.instance.displayPLayerHand(playerid, playerHand, cards);
+        DisplayHand.instance.displayPLayerHand(playerid, currentPlayerHansds[playerid], cards);
 
         //displaying player and hand for testing purposes
-        Debug.Log("Player ID: " + currentPlayerHansds.Keys + "Cards Held: " + currentPlayerHansds.Values);
+        //Debug.Log("Player ID: " + currentPlayerHansds[playerid] + "Cards Held: " + currentPlayerHansds.Values);
 
 
         //add a way to stop duplicates later

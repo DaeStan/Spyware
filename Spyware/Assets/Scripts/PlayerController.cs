@@ -5,7 +5,6 @@ using Photon.Pun;
 using Photon.Realtime;
 using Unity.VisualScripting;
 using UnityEngine.EventSystems;
-
 //import CardManager
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
@@ -15,19 +14,22 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
    // private GameObject cardPlayed;
 
-    private CardManager CardManager;
+    //private CardManager CardManager;
 
     //bool playerHasWon = false;
-    //bool activePlayer = false;
+    bool activePlayer = true;
     int winningcard = 0;
-    string cardNumber;
+   // string cardNumber;
     int cardPlayed;
+
+    int[] currentPlayerHand;
 
     [PunRPC]
     public void Initialize(Player player)
     {
         photonPlayer = player;
         id = player.ActorNumber;
+        //getPlayerId(player);
         Debug.Log("player entered game");
         Debug.Log(PhotonNetwork.PlayerList[id - 1].NickName);
 
@@ -37,7 +39,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log("Initalize player Id: " + id);
         CardManager.instance.dealCards(id);
     }
-
+  /*  public int getPlayerId(Player player)
+    {
+        photonPlayer = player;
+        Debug.Log(photonPlayer);
+        id = player.ActorNumber;
+        Debug.Log("Player.Actornumber: " + player.ActorNumber);
+        Debug.Log("player id in get player id: " + id);
+        return id;
+    } */
     //function playerCards 
     //track winning card for player
 
@@ -63,26 +73,41 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void PlayerTurn()
     {
-        while (true) //change this to be while player has 5 cards in hand later arrayl.length = maxCardsForHand
+        Debug.Log("playerturn cureent id: " + id);
+
+        var cardManager = CardManager.instance;
+        currentPlayerHand = cardManager.currentPlayerHansds[id];
+
+        for (int i = 0; i < currentPlayerHand.Length; i++)
         {
-            //id = PhotonNetwork.LocalPlayer.ActorNumber;
-           // if (id == 0) //quick fix for now
-           // {
-           //     id = 1;
-           // }
+            if (currentPlayerHand[i] == null)
+            {
+                activePlayer = false;
+            }
+        }
+
+        Debug.Log("current player array length: " + currentPlayerHand.Length);
+        if (activePlayer == true) //change this to be while player has 5 cards in hand later arrayl.length = maxCardsForHand
+        {
+            if (id == 0)  // Check if ID is not properly initialized
+            {
+                Debug.LogError("Player ID is not initialized before PlayerTurn is called.");
+                return;  // Exit early if id is invalid
+            }
+
             string selectedCard = EventSystem.current.currentSelectedGameObject.name;
             Debug.Log(id + ": " + selectedCard);
             if (winningcard == 0)
             {
-              //  cardNumber = selectedCard[0];
+              //cardNumber = selectedCard[0];
               //  winningcard = int.Parse(cardNumber);
                 winningcard = selectedCard[0]; //this is not giving correct card number fix later
                 Debug.Log("PLayer " + id + " choose: " + winningcard);
             }
-            if (winningcard == 7) //check to see if the winning card has left and made it back to player hand
-            {
+           // if (winningcard == 7) //check to see if the winning card has left and made it back to player hand
+           // {
 
-            }
+           // }
             else
             {
                 //pass card to next player
@@ -92,6 +117,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 CardManager.instance.passCard(id, cardPlayed);
             }
         }
+        
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviourPunCallbacks
     public PlayerController[] players; // array of all the players
     public int playersInGame; // number of players in the game
 
+    public PlayerController activePlayer;
+
     private void Awake()
     {
         instance = this;
@@ -39,5 +41,18 @@ public class GameManager : MonoBehaviourPunCallbacks
             playerScript.photonView.RPC("Initialize", RpcTarget.All, PhotonNetwork.LocalPlayer);
         }
 
+    }
+
+    [PunRPC]
+    public void OnButtonClicked()
+    {
+        foreach (PlayerController player in players)
+        {
+            if (player.photonView.IsMine)
+                player.PlayerTurn();
+        }
+        // int currentPlayerId = activePlayer.getPlayerId(player);
+        // Debug.Log("current player id: " + currentPlayerId);
+        //activePlayer.PlayerTurn();
     }
 }
