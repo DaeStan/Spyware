@@ -5,6 +5,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using Unity.VisualScripting;
 using UnityEngine.EventSystems;
+using System;
 //import CardManager
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
@@ -99,9 +100,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             Debug.Log(id + ": " + selectedCard);
             if (winningcard == 0)
             {
-              //cardNumber = selectedCard[0];
-              //  winningcard = int.Parse(cardNumber);
-                winningcard = selectedCard[0]; //this is not giving correct card number fix later
+                //cardNumber = selectedCard[0];
+                //  winningcard = int.Parse(cardNumber);
+                winningcard = (int)Char.GetNumericValue(selectedCard[0]);
                 Debug.Log("PLayer " + id + " choose: " + winningcard);
             }
            // if (winningcard == 7) //check to see if the winning card has left and made it back to player hand
@@ -112,7 +113,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             {
                 //pass card to next player
                 //cardPlayed = GameObject.Find(selectedCard);
-                cardPlayed = selectedCard[0];
+                cardPlayed = (int)Char.GetNumericValue(selectedCard[0]);
                 Debug.Log("PlayerTurn Id: " + id);
                 CardManager.instance.passCard(id, cardPlayed);
             }
@@ -120,9 +121,27 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         
     }
 
+    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    //{
+     //   throw new System.NotImplementedException();
+    //}
+
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        throw new System.NotImplementedException();
+        if (stream.IsWriting)
+        {
+            // This is the local player. We send data to other players.
+            stream.SendNext(id);
+            stream.SendNext(activePlayer);
+            stream.SendNext(winningcard);
+        }
+        else
+        {
+            // This is a remote player. We receive data from the other players.
+            id = (int)stream.ReceiveNext();
+            activePlayer = (bool)stream.ReceiveNext();
+            winningcard = (int)stream.ReceiveNext();
+        }
     }
 
 }

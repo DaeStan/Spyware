@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public PlayerController[] players; // array of all the players
     public int playersInGame; // number of players in the game
 
-    public PlayerController activePlayer;
+//    public PlayerController activePlayer;
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void ImInGame()
     {
         playersInGame++;
-        if (playersInGame == PhotonNetwork.PlayerList.Length)
+        if (photonView.IsMine && playersInGame == PhotonNetwork.PlayerList.Length)
         {
             GameObject player = PhotonNetwork.Instantiate(playerPrefabLocation, new Vector3(0, 0, 0), Quaternion.identity);
 
@@ -49,7 +49,9 @@ public class GameManager : MonoBehaviourPunCallbacks
         foreach (PlayerController player in players)
         {
             if (player.photonView.IsMine)
+            {
                 player.PlayerTurn();
+            }
         }
         // int currentPlayerId = activePlayer.getPlayerId(player);
         // Debug.Log("current player id: " + currentPlayerId);
