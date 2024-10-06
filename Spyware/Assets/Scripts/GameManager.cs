@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     void ImInGame()
     {
         playersInGame++;
-        if (photonView.IsMine && playersInGame == PhotonNetwork.PlayerList.Length)
+        if (playersInGame == PhotonNetwork.PlayerList.Length) //photonView.IsMine && 
         {
             GameObject player = PhotonNetwork.Instantiate(playerPrefabLocation, new Vector3(0, 0, 0), Quaternion.identity);
 
