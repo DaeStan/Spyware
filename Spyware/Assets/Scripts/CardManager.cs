@@ -121,6 +121,7 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
         //convert array to list to remove card
         passingCard = new List<int>(currentPlayerHand);
         passingCard.Remove(passedCard);
+        passingCard.Add(0);
         currentPlayerHand = passingCard.ToArray();
         currentPlayerHansds[currentPlayerId] = currentPlayerHand; //may have to update this array for the id
         DisplayHand.instance.displayPLayerHand(currentPlayerId, currentPlayerHand, cards);

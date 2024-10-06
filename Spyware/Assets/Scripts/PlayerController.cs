@@ -81,7 +81,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         for (int i = 0; i < currentPlayerHand.Length; i++)
         {
-            if (currentPlayerHand[i] == null) //set to zero and check for 0
+            if (currentPlayerHand[i] == 0) //set to zero and check for 0
             {
                 activePlayer = false;
             }
