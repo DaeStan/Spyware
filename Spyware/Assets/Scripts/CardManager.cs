@@ -1,7 +1,9 @@
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 //import player ids (using player controller)
@@ -55,20 +57,20 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
         {
             do
             {
-                shufflingDeck = Random.Range(1, numberOfCardsInDeck);
+                shufflingDeck = UnityEngine.Random.Range(1, numberOfCardsInDeck);
             } while (cardsDelt.Contains(shufflingDeck));
 
             playerHand[i] = shufflingDeck;
             cardsDelt.Add(shufflingDeck);
 
-            Debug.Log("PlayerID: " + playerid + "RandomNumber: " + playerHand[i]);
+            //Debug.Log("PlayerID: " + playerid + "RandomNumber: " + playerHand[i]);
         }
 
         if (playerid == 1)
         {
             do
             {
-                shufflingDeck = Random.Range(1, numberOfCardsInDeck);
+                shufflingDeck = UnityEngine.Random.Range(1, numberOfCardsInDeck);
             } while (cardsDelt.Contains(shufflingDeck));
 
             playerHand[maxCardsForHand - 1] = shufflingDeck;
@@ -122,6 +124,7 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
         passingCard = new List<int>(currentPlayerHand);
         passingCard.Remove(passedCard);
         passingCard.Add(0);
+        displayList(passingCard);
         currentPlayerHand = passingCard.ToArray();
         currentPlayerHansds[currentPlayerId] = currentPlayerHand; //may have to update this array for the id
         DisplayHand.instance.displayPLayerHand(currentPlayerId, currentPlayerHand, cards);
@@ -129,13 +132,21 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
         //adding card to next players hand
         passingCard = new List<int>(nextPlayerHand);
         passingCard.Add(passedCard);
+        displayList(passingCard);
         nextPlayerHand = passingCard.ToArray();
         currentPlayerHansds[nextPlayerId] = nextPlayerHand;
         DisplayHand.instance.displayPLayerHand(nextPlayerId, nextPlayerHand, cards);
     }
 
 
-
+    void displayList(List<int> passingCard)
+    {
+        Debug.Log("displaying List:   ");
+        foreach (int card in passingCard)
+        {
+            Debug.Log(card);
+        }
+    }
 
 
     //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

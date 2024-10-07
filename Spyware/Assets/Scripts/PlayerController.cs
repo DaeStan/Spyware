@@ -19,7 +19,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     //bool playerHasWon = false;
     bool activePlayer = true;
-    int winningcard = 0;
+    int winningcard = -1;
+    bool canWin = false;
    // string cardNumber;
     int cardPlayed;
 
@@ -84,43 +85,47 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if (currentPlayerHand[i] == 0) //set to zero and check for 0
             {
                 activePlayer = false;
+                Debug.Log("please wait your turn...");
+            }
+            if (currentPlayerHand[i] == winningcard && canWin == true)
+            {
+                Debug.Log("Player" + id + "has WON");
             }
         }
 
         Debug.Log("current player array length: " + currentPlayerHand.Length);
-        if (activePlayer == true) //change this to be while player has 5 cards in hand later arrayl.length = maxCardsForHand
+        if (activePlayer == true) 
         {
-            if (id == 0)  // Check if ID is not properly initialized
-            {
-                Debug.LogError("Player ID is not initialized before PlayerTurn is called.");
-                return;  // Exit early if id is invalid
-            }
-
             string selectedCard = EventSystem.current.currentSelectedGameObject.name;
             Debug.Log(id + ": " + selectedCard);
-            if (winningcard == 0)
+            if (winningcard == -1)
             {
                 //cardNumber = selectedCard[0];
-                //  winningcard = int.Parse(cardNumber);
                 winningcard = (int)Char.GetNumericValue(selectedCard[0]);
                 Debug.Log("PLayer " + id + " choose: " + winningcard);
             }
            // if (winningcard == 7) //check to see if the winning card has left and made it back to player hand
            // {
-
-           // }
             else
             {
                 //pass card to next player
                 //cardPlayed = GameObject.Find(selectedCard);
                 cardPlayed = (int)Char.GetNumericValue(selectedCard[0]);
+                CheckForWinningCard();
                 Debug.Log("PlayerTurn Id: " + id);
                 CardManager.instance.passCard(id, cardPlayed);
             }
         }
         
     }
-
+    
+    void CheckForWinningCard()
+    {
+        if (winningcard == cardPlayed)
+        {
+            canWin = true;
+        }
+    }
     //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     //{
      //   throw new System.NotImplementedException();
