@@ -13,15 +13,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public int id;
     public Player photonPlayer;
 
-   // private GameObject cardPlayed;
-
-    //private CardManager CardManager;
-
-    //bool playerHasWon = false;
     bool activePlayer = true;
     int winningcard = -1;
     bool canWin = false;
-   // string cardNumber;
+
     int cardPlayed;
 
     int[] currentPlayerHand;
@@ -31,29 +26,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         photonPlayer = player;
         id = player.ActorNumber;
-        //getPlayerId(player);
         Debug.Log("player entered game");
         Debug.Log(PhotonNetwork.PlayerList[id - 1].NickName);
-
         GameManager.instance.players[id - 1] = this;
-
-        //CardManager = GetComponent<CardManager>();
         Debug.Log("Initalize player Id: " + id);
-        CardManager.instance.dealCards(id);
+        CardManager.instance.DealCards(id);
     }
-  /*  public int getPlayerId(Player player)
-    {
-        photonPlayer = player;
-        Debug.Log(photonPlayer);
-        id = player.ActorNumber;
-        Debug.Log("Player.Actornumber: " + player.ActorNumber);
-        Debug.Log("player id in get player id: " + id);
-        return id;
-    } */
+ 
     //function playerCards 
     //track winning card for player
-
-
 
     //beginging of each turn
     //check if it is players turn if player has 5 cards
@@ -75,14 +56,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     public void PlayerTurn()
     {
-        Debug.Log("playerturn cureent id: " + id);
+        //Debug.Log("playerturn cureent id: " + id);
 
         var cardManager = CardManager.instance;
         currentPlayerHand = cardManager.currentPlayerHansds[id];
 
         for (int i = 0; i < currentPlayerHand.Length; i++)
         {
-            if (currentPlayerHand[i] == 0) //set to zero and check for 0
+            if (currentPlayerHand[i] == 0)
             {
                 activePlayer = false;
                 Debug.Log("please wait your turn...");
@@ -93,7 +74,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
 
-        Debug.Log("current player array length: " + currentPlayerHand.Length);
+        //Debug.Log("current player array length: " + currentPlayerHand.Length);
         if (activePlayer == true) 
         {
             string selectedCard = EventSystem.current.currentSelectedGameObject.name;
@@ -104,8 +85,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 winningcard = (int)Char.GetNumericValue(selectedCard[0]);
                 Debug.Log("PLayer " + id + " choose: " + winningcard);
             }
-           // if (winningcard == 7) //check to see if the winning card has left and made it back to player hand
-           // {
             else
             {
                 //pass card to next player
@@ -113,10 +92,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 cardPlayed = (int)Char.GetNumericValue(selectedCard[0]);
                 CheckForWinningCard();
                 Debug.Log("PlayerTurn Id: " + id);
-                CardManager.instance.passCard(id, cardPlayed);
+                CardManager.instance.PassCard(id, cardPlayed);
             }
-        }
-        
+        } 
     }
     
     void CheckForWinningCard()
@@ -126,10 +104,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             canWin = true;
         }
     }
-    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //{
-     //   throw new System.NotImplementedException();
-    //}
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
@@ -148,5 +122,4 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             winningcard = (int)stream.ReceiveNext();
         }
     }
-
 }

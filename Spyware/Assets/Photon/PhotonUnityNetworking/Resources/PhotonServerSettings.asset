@@ -48,6 +48,10 @@ MonoBehaviour:
   - displayPLayerHand
   - PlayerTurn
   - OnButtonClicked
+  - DealCards
+  - DisplayPLayerHand
+  - PassCard
+  - ShuffleDeck
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

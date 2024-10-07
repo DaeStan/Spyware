@@ -26,7 +26,7 @@ public class DisplayHand : MonoBehaviourPunCallbacks
     void Awake() { instance = this; }
 
     [PunRPC]
-    public void displayPLayerHand(int playerid, int[] playerHand, Dictionary<string, int> deck)
+    public void DisplayPLayerHand(int playerid, int[] playerHand, Dictionary<string, int> deck)
     {
         playerCanvas = GameObject.Find("PlayerScreen");
         cardDeck = GameObject.Find("Deck");

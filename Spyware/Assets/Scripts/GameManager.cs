@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void Start()
     {
+        CardManager.instance.ShuffleDeck();
         players = new PlayerController[PhotonNetwork.PlayerList.Length];
         photonView.RPC("ImInGame", RpcTarget.All);
     }
@@ -53,8 +54,5 @@ public class GameManager : MonoBehaviourPunCallbacks
                 player.PlayerTurn();
             }
         }
-        // int currentPlayerId = activePlayer.getPlayerId(player);
-        // Debug.Log("current player id: " + currentPlayerId);
-        //activePlayer.PlayerTurn();
     }
 }
