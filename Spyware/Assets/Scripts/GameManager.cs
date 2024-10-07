@@ -44,6 +44,18 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     }
 
+    public PlayerController GetPlayer(int id)
+    {
+        foreach (PlayerController player in players)
+        {
+            if (player != null && player.id == id)
+            {
+                return player;
+            }
+        }
+        return null;
+    }
+
     [PunRPC]
     public void OnButtonClicked()
     {

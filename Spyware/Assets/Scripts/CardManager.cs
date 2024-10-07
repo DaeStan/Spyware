@@ -48,23 +48,10 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
 
         for (int j = 1; j <= maxNumberOfPlayers; j++)
         {
-           // if (currentPlayerHansds.ContainsKey(j)) //should be able to get rid of this once figuring out issue
-           // {
-             //   Debug.LogError("Player " + j + "'s hand already exists in the dictionary.");
-            //    continue;
-            //}
             int[] playerHand = new int[maxCardsForHand];
-            Debug.Log("j =" + j);
 
             for (int i = 0; i < maxCardsForHand - 1; i++)
             {
-                // Debug.Log("in for loop...");
-                if (cardsDelt.Count >= numberOfCardsInDeck)
-                {
-                    Debug.LogError("All cards have been dealt. Stopping shuffle.");
-                    return; // Stop if all cards are dealt
-                }
-
                 do
                 {
                     shufflingDeck = Random.Range(1, numberOfCardsInDeck + 1);
@@ -73,8 +60,6 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
                 playerHand[i] = shufflingDeck;
                 cardsDelt.Add(shufflingDeck);
             }
-            Debug.Log("j = " + j);
-
             if (j == 1)
             {
                 do
@@ -111,7 +96,7 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
     //current player id, remove passed card from currenthand
     //next player id, add passed card to current hand
     [PunRPC]
-    public void PassCard(int currentPlayerId, int passedCard)
+    public int PassCard(int currentPlayerId, int passedCard)
     {
         numberOfPlayers = GameManager.playersInGame;//might move this outside of functions later
 
@@ -148,6 +133,8 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
         nextPlayerHand = passingCard.ToArray();
         currentPlayerHansds[nextPlayerId] = nextPlayerHand;
         DisplayHand.instance.DisplayPLayerHand(nextPlayerId, nextPlayerHand, cards);
+
+        return nextPlayerId;
     }
 
 

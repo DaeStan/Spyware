@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public int id;
     public Player photonPlayer;
 
-    bool activePlayer = true;
+    bool activePlayer = false;
     int winningcard = -1;
     bool canWin = false;
 
@@ -61,6 +61,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         var cardManager = CardManager.instance;
         currentPlayerHand = cardManager.currentPlayerHansds[id];
 
+        if (id == 1 && canWin == false)
+        {
+            Debug.Log("this is the first turn player 1 may start...");
+            activePlayer = true;
+        }
+
         for (int i = 0; i < currentPlayerHand.Length; i++)
         {
             if (currentPlayerHand[i] == 0)
@@ -70,7 +76,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             }
             if (currentPlayerHand[i] == winningcard && canWin == true)
             {
-                Debug.Log("Player" + id + "has WON");
+                Debug.Log("Player " + id + " has WON!!!!!!!!!!!!!!!!!!!!!!");
             }
         }
 
@@ -92,7 +98,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 cardPlayed = (int)Char.GetNumericValue(selectedCard[0]);
                 CheckForWinningCard();
                 Debug.Log("PlayerTurn Id: " + id);
-                CardManager.instance.PassCard(id, cardPlayed);
+                int nextPlayer = CardManager.instance.PassCard(id, cardPlayed);
+
+                activePlayer = false;
+
+                GameManager.instance.GetPlayer(nextPlayer).activePlayer = true;
             }
         } 
     }
