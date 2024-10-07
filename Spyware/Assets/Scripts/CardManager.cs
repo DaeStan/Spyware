@@ -120,7 +120,7 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
             nextPlayerId = currentPlayerId + 1;
         }
 
-        //convert array to list to remove card
+        //convert array to list to remove card and replace it with 0
         passingCard = new List<int>(currentPlayerHand);
         passingCard.Remove(passedCard);
         passingCard.Add(0);
@@ -131,6 +131,10 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
 
         //adding card to next players hand
         passingCard = new List<int>(nextPlayerHand);
+        if (passingCard.Contains(0))
+        {
+            passingCard.Remove(0);
+        }
         passingCard.Add(passedCard);
         displayList(passingCard);
         nextPlayerHand = passingCard.ToArray();

@@ -13,6 +13,7 @@ public class DisplayHand : MonoBehaviourPunCallbacks
     string cardPrefabName;
 
     GameObject playerCanvas;
+    GameObject cardDeck;
 
     //get player id fromm player controller
 
@@ -25,16 +26,28 @@ public class DisplayHand : MonoBehaviourPunCallbacks
     void Awake() { instance = this; }
 
     [PunRPC]
-public void displayPLayerHand (int playerid, int[] playerHand, Dictionary<string, int> deck)
+    public void displayPLayerHand(int playerid, int[] playerHand, Dictionary<string, int> deck)
     {
         playerCanvas = GameObject.Find("PlayerScreen");
+        cardDeck = GameObject.Find("Deck");
+
+        //clearing cards 
+        foreach (Transform child in playerCanvas.transform)
+        {
+            Debug.Log("child of canvas:" + child.name);
+            child.transform.SetParent(cardDeck.transform, true);
+        }
+
+        foreach (Transform child in cardDeck.transform)
+        {
+            Debug.Log("child of Deck:" + child.name);
+            //child.transform.SetParent(cardDeck.transform, true);
+        }
+
         for (int i = 0; i < playerHand.Length; i++)
         {
             cardNumber = playerHand[i];
-           // if(cardNumber == 0) //get rid of once player id in other funtions are fixed
-           // {
-           //     cardNumber = 1;
-           // }
+
             Debug.Log("inDisplayFunction: " + cardNumber);
             foreach (KeyValuePair<string, int> kvp in deck)
             {
@@ -45,21 +58,6 @@ public void displayPLayerHand (int playerid, int[] playerHand, Dictionary<string
                     GameObject cardPrefab = GameObject.Find(cardPrefabName);
 
                     //Debug.Log("Got card object" + cardPrefab.name);
-
-
-                    //error messages
-                    if (cardPrefab == null)
-                    {
-                        Debug.LogError("Card Prefab with name " + cardPrefabName + " not found in the scene.");
-                        return;  // Exit if cardPrefab is null to prevent null reference exceptions
-                    }
-
-                    // Ensure playerCanvas is not null
-                    if (playerCanvas == null)
-                    {
-                        Debug.LogError("Player canvas is not assigned.");
-                        return;  // Exit if playerCanvas is null to prevent null reference exceptions
-                    }
 
                     cardPrefab.transform.SetParent(playerCanvas.transform, true);
 
