@@ -6,13 +6,12 @@ using UnityEngine;
 
 //import player ids (using player controller)
 
-public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
+public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
 {
     public static int maxCardsForHand = 3;
     public static int maxNumberOfPlayers = 4;
     int numberOfCardsInDeck;
     int shufflingDeck;
-  //  int[] playerHand = new int[maxCardsForHand]; //= new int[MaxCardsForHand];
     int[] currentPlayerHand;
     int[] nextPlayerHand;
     int nextPlayerId;
@@ -147,9 +146,19 @@ public class CardManager : MonoBehaviourPunCallbacks //, IPunObservable
         }
     }
 
-
-    //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-    //{
-    //    ((IPunObservable)PlayerController).OnPhotonSerializeView(stream, info);
-    //}
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            // Send data to other clients
+            stream.SendNext(currentPlayerHansds);
+            stream.SendNext(cardsDelt);
+        }
+        else
+        {
+            // Receive data from other clients
+            currentPlayerHansds = (Dictionary<int, int[]>)stream.ReceiveNext();
+            cardsDelt = (HashSet<int>)stream.ReceiveNext();
+        }
+    }
 }

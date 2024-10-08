@@ -69,18 +69,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
         for (int i = 0; i < currentPlayerHand.Length; i++)
         {
-            if (currentPlayerHand[i] == 0)
-            {
-                activePlayer = false;
-                Debug.Log("please wait your turn...");
-            }
             if (currentPlayerHand[i] == winningcard && canWin == true)
             {
                 Debug.Log("Player " + id + " has WON!!!!!!!!!!!!!!!!!!!!!!");
             }
         }
-
-        //Debug.Log("current player array length: " + currentPlayerHand.Length);
         if (activePlayer == true) 
         {
             string selectedCard = EventSystem.current.currentSelectedGameObject.name;
@@ -119,17 +112,25 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (stream.IsWriting)
         {
-            // This is the local player. We send data to other players.
+            // Send local player data to other players
             stream.SendNext(id);
             stream.SendNext(activePlayer);
             stream.SendNext(winningcard);
+            stream.SendNext(canWin);
+
+            // Optional: Send player's current hand if it's needed on all clients
+            stream.SendNext(currentPlayerHand);
         }
         else
         {
-            // This is a remote player. We receive data from the other players.
+            // Receive data from the other players
             id = (int)stream.ReceiveNext();
             activePlayer = (bool)stream.ReceiveNext();
             winningcard = (int)stream.ReceiveNext();
+            canWin = (bool)stream.ReceiveNext();
+
+            // Optional: Receive current hand if synced
+            currentPlayerHand = (int[])stream.ReceiveNext();
         }
     }
 }
