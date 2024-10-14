@@ -19,15 +19,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         instance = this;
+        if (PhotonNetwork.IsMasterClient) 
+            CardManager.instance.ShuffleDeck();
     }
 
     [PunRPC]
     void Start()
     {
-        if (PhotonNetwork.IsMasterClient)
-        {
-            CardManager.instance.ShuffleDeck();
-        }
         players = new PlayerController[PhotonNetwork.PlayerList.Length];
         photonView.RPC("ImInGame", RpcTarget.All);
     }
