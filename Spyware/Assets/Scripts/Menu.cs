@@ -108,6 +108,5 @@ public class Menu : MonoBehaviourPunCallbacks
     {
         //add check for player count
         NetworkManager.instance.photonView.RPC("ChangeScene", RpcTarget.All, "Game");
-
     }
 }

@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     private void Awake()
     {
         instance = this;
-        if (PhotonNetwork.IsMasterClient) 
-            CardManager.instance.ShuffleDeck();
     }
 
     [PunRPC]
@@ -36,6 +34,12 @@ public class GameManager : MonoBehaviourPunCallbacks
         playersInGame++;
         if (playersInGame == PhotonNetwork.PlayerList.Length) //photonView.IsMine && 
         {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                CardManager.instance.ShuffleDeck();
+                Debug.Log("Cards Shuffled");
+            }
+
             GameObject player = PhotonNetwork.Instantiate(playerPrefabLocation, new Vector3(0, 0, 0), Quaternion.identity);
 
             PlayerController playerScript = player.GetComponent<PlayerController>();

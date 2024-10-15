@@ -26,7 +26,10 @@ public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
 
     public static CardManager instance;
 
-    void Awake() { instance = this; }
+    void Awake() 
+    { 
+        instance = this; 
+    }
 
 
     //deck of cards
