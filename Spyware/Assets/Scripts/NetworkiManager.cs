@@ -49,5 +49,6 @@
         public override void OnConnectedToMaster ()
         {
             Debug.Log("Connected to master server");
+            PhotonNetwork.JoinLobby();
         }
     }
