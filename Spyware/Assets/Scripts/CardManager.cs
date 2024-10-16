@@ -19,12 +19,24 @@ public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
     List<int> passingCard;
     private int numberOfPlayers; // = GameManager.playersInGame;
 
+
+    private List<int> currentPlayers;
+
     HashSet<int> cardsDelt = new HashSet<int>();
 
     public GameManager GameManager;
     public PlayerController PlayerController;
 
     public static CardManager instance;
+
+    //inital player cards hard coded
+    //int[] playerOne = {1, 2, 3};
+    //int[] playerTwo = { 4, 5, 0 };
+    //int[] playerThree = { 6, 7, 0 };
+    //int[] playerFour = {8, 9, 0 };
+
+    //playerOne = {1, 2, 3}
+
 
     void Awake() 
     { 
@@ -39,7 +51,10 @@ public class CardManager : MonoBehaviourPunCallbacks, IPunObservable
             {"6card", 6}, {"7card", 7}, {"8card", 8}, {"9card", 9}
         };
 
-    public Dictionary<int, int[]> currentPlayerHansds = new Dictionary<int, int[]>();
+    public Dictionary<int, int[]> currentPlayerHansds =
+        new Dictionary<int, int[]>(); //{
+            //{1, playerOne}
+       // };
 
 
     //ShuffleCards function
